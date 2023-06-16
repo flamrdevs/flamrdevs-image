@@ -7,6 +7,7 @@ import { __PROD__ } from "~/const/env";
 
 import { json } from "~/libs/fastify";
 
+import cache from "~/libs/@fastify/cache";
 import image from "~/libs/@fastify/image";
 
 import routeTilde from "~/routes/~";
@@ -18,6 +19,7 @@ const app = fastify({ logger: !__PROD__ })
 	.register(cors, { origin: "*" })
 	.register(compress)
 
+	.register(cache)
 	.register(image)
 
 	.register(routeTilde, { prefix: "/~" })
