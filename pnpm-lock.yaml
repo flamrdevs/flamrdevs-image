@@ -24,9 +24,6 @@ devDependencies:
   '@types/node':
     specifier: ^20.3.1
     version: 20.3.1
-  dotenv:
-    specifier: ^16.1.4
-    version: 16.1.4
   terser:
     specifier: ^5.18.0
     version: 5.18.0
@@ -580,11 +577,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       path-type: 4.0.0
-    dev: true
-
-  /dotenv@16.1.4:
-    resolution: {integrity: sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==}
-    engines: {node: '>=12'}
     dev: true
 
   /duplexify@3.7.1:

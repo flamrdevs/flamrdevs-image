@@ -2,8 +2,8 @@
 	"name": "flamrdevs-image",
 	"private": true,
 	"scripts": {
-		"dev": "tsup-node --env.NODE_ENV development --onSuccess \"node main.js\"",
-		"build": "tsup-node --env.NODE_ENV production",
+		"dev": "tsup-node --env.MODE development --onSuccess \"node main.js\"",
+		"build": "tsup-node --env.MODE production",
 		"preview": "node main.js",
 		"start": "node main.js"
 	},
@@ -17,7 +17,6 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20.3.1",
-		"dotenv": "^16.1.4",
 		"terser": "^5.18.0",
 		"tsup": "^6.7.0",
 		"typescript": "^5.1.3"
