@@ -16,7 +16,6 @@ export default route((fastify, _, done) => {
 		.get("/env", async (_, rep) => {
 			return json(rep, 200, {
 				MODE: process.env.MODE,
-				PORT: process.env.PORT,
 			});
 		});
 

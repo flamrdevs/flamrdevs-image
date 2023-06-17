@@ -5,14 +5,20 @@ import Button from "~/components/core/Button";
 import IconButton from "~/components/core/IconButton";
 import { ICON_DEFAULT, isSimpleIcons, simpleIcons } from "~/components/icon/simple-icons";
 
-import { COLOR_DEFAULT, THEME_DEFAULT, isColor, isTheme } from "~/styles/contract";
+import { COLOR_DEFAULT, THEME_DEFAULT, isColor, isTheme } from "~/styles/utils";
 
 import * as HOST from "~/utils/host";
-import { createKey, send } from "~/utils/image";
-import { getString } from "~/utils/other";
+import { getString } from "~/utils/string";
 
 export default route((fastify, _, done) => {
 	const cache = new Map<string, string>();
+
+	const key = (base: string, object: Record<string, string>) =>
+		`${base}:${Object.entries(object)
+			.map(([key, value]) => `${key}=${value}`)
+			.join("&")}`;
+
+	const HEADERS = { "content-type": "image/svg+xml" };
 
 	const image = async (key: string, element: () => RootElement): Promise<string> => {
 		let result = cache.get(key);
@@ -39,7 +45,7 @@ export default route((fastify, _, done) => {
 			if (!isColor(color)) throw new Error("Invalid color");
 			if (!isTheme(theme)) throw new Error("Invalid theme");
 
-			return send(rep, await image(createKey("button", { color, theme, text }), () => Button({ color, theme, children: text })));
+			return rep.headers(HEADERS).send(await image(key("button", { color, theme, text }), () => Button({ color, theme, children: text })));
 		})
 
 		.get<{ Querystring: Partial<Record<"color" | "theme" | "icon", string>> }>("/icon-button", async (req, rep) => {
@@ -51,7 +57,9 @@ export default route((fastify, _, done) => {
 			if (!isTheme(theme)) throw new Error("Invalid theme");
 			if (!isSimpleIcons(icon)) throw new Error("Invalid icon");
 
-			return send(rep, await image(createKey("icon-button", { color, theme, icon }), () => IconButton({ color, theme, children: simpleIcons[icon]({ color, theme }) })));
+			return rep
+				.headers(HEADERS)
+				.send(await image(key("icon-button", { color, theme, icon }), () => IconButton({ color, theme, children: simpleIcons[icon]({ color, theme }) })));
 		});
 
 	done();

@@ -13,7 +13,7 @@ import image from "~/libs/@fastify/image";
 import routeTilde from "~/routes/~";
 import routeCore from "~/routes/core";
 
-import { getString } from "~/utils/other";
+import { getString } from "~/utils/string";
 
 const app = fastify({ logger: !__PROD__ })
 	.register(cors, { origin: "*" })

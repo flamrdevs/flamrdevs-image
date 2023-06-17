@@ -1,8 +1,8 @@
 import { h } from "~/libs/image";
 import type { PropsWithChildren, RootComponent, RootCSSProperties } from "~/libs/image";
 
-import { select } from "~/styles/contract";
-import type { Color, Theme } from "~/styles/contract";
+import type { Color, Theme } from "~/styles/types";
+import { select } from "~/styles/utils";
 
 import SVGFilterNoise from "~/components/misc/SVGFilterNoise";
 
