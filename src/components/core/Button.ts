@@ -27,9 +27,9 @@ const Button: RootComponent<ButtonProps> = ({ color, theme, width, height, style
 			overflow: "hidden",
 			width: typeof width !== "number" || isNaN(width) || width < WIDTH ? WIDTH : width,
 			height: typeof height !== "number" || isNaN(height) || height < HEIGHT ? HEIGHT : height,
+			backgroundImage: `linear-gradient(130deg, ${__color__[11]}, ${__color__[8]}, ${__color__[6]})`,
 			color: __color__[12],
-			backgroundImage: `linear-gradient(130deg, ${__color__[12]}, ${__color__[8]}, ${__color__[6]})`,
-			borderRadius: 5,
+			borderRadius: "0.25rem",
 			...style,
 		},
 		children: [
@@ -43,7 +43,7 @@ const Button: RootComponent<ButtonProps> = ({ color, theme, width, height, style
 					left: 1,
 					overflow: "hidden",
 					backgroundImage: `linear-gradient(130deg, ${__color__[3]}, ${__color__[1]})`,
-					borderRadius: 4,
+					borderRadius: "0.2rem",
 				},
 				children: [
 					SVGFilterNoise({}),
