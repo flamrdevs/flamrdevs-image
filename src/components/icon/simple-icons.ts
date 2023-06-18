@@ -3,27 +3,23 @@ import * as si from "simple-icons";
 import { h } from "~/libs/image";
 import type { Component } from "~/libs/image";
 
-import type { Color, Theme } from "~/styles/types";
-import { select } from "~/styles/utils";
-
 type Props = {
-	color?: Color;
-	theme?: Theme;
 	width?: string | number;
 	height?: string | number;
+	fill?: string;
 };
 
 const DEFAULT_SIZE = 16;
 
 const create =
 	(d: string): Component<Props> =>
-	({ color, theme, width = DEFAULT_SIZE, height = DEFAULT_SIZE }) => {
+	({ width = DEFAULT_SIZE, height = DEFAULT_SIZE, fill = "currentColor" }) => {
 		return h("svg", {
 			role: "img",
 			viewBox: "0 0 24 24",
-			fill: select(color, theme)[12],
 			width,
 			height,
+			fill,
 			children: h("path", { d }),
 		});
 	};
