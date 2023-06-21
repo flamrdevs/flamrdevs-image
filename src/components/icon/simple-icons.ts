@@ -4,8 +4,7 @@ import { h } from "~/libs/image";
 import type { Component } from "~/libs/image";
 
 type Props = {
-	width?: string | number;
-	height?: string | number;
+	size?: string | number;
 	fill?: string;
 };
 
@@ -13,12 +12,12 @@ const DEFAULT_SIZE = 16;
 
 const create =
 	(d: string): Component<Props> =>
-	({ width = DEFAULT_SIZE, height = DEFAULT_SIZE, fill = "currentColor" }) => {
+	({ size = DEFAULT_SIZE, fill = "currentColor" }) => {
 		return h("svg", {
 			role: "img",
 			viewBox: "0 0 24 24",
-			width,
-			height,
+			width: size,
+			height: size,
 			fill,
 			children: h("path", { d }),
 		});

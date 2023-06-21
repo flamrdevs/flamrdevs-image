@@ -57,9 +57,7 @@ export default route((fastify, _, done) => {
 			if (!isTheme(theme)) throw new Error("Invalid theme");
 			if (!isSimpleIcons(icon)) throw new Error("Invalid icon");
 
-			return rep
-				.headers(HEADERS)
-				.send(await image(key("icon-button", { color, theme, icon }), () => IconButton({ color, theme, children: simpleIcons[icon]({ color, theme }) })));
+			return rep.headers(HEADERS).send(await image(key("icon-button", { color, theme, icon }), () => IconButton({ color, theme, children: simpleIcons[icon]({}) })));
 		});
 
 	done();
