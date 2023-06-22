@@ -8,7 +8,7 @@ import { ICON_DEFAULT, isSimpleIcons, simpleIcons } from "~/components/icon/simp
 import { COLOR_DEFAULT, THEME_DEFAULT, isColor, isTheme } from "~/styles/utils";
 
 import * as HOST from "~/utils/host";
-import { getString } from "~/utils/string";
+import { isTypeElse } from "~/utils/string";
 
 export default route((fastify, _, done) => {
 	const cache = new Map<string, string>();
@@ -38,9 +38,9 @@ export default route((fastify, _, done) => {
 		})
 
 		.get<{ Querystring: Partial<Record<"color" | "theme" | "text", string>> }>("/button", async (req, rep) => {
-			const color = getString(req.query.color, COLOR_DEFAULT);
-			const theme = getString(req.query.theme, THEME_DEFAULT);
-			const text = getString(req.query.text, "flamrdevs");
+			const color = isTypeElse(req.query.color, COLOR_DEFAULT);
+			const theme = isTypeElse(req.query.theme, THEME_DEFAULT);
+			const text = isTypeElse(req.query.text, "flamrdevs");
 
 			if (!isColor(color)) throw new Error("Invalid color");
 			if (!isTheme(theme)) throw new Error("Invalid theme");
@@ -49,9 +49,9 @@ export default route((fastify, _, done) => {
 		})
 
 		.get<{ Querystring: Partial<Record<"color" | "theme" | "icon", string>> }>("/icon-button", async (req, rep) => {
-			const color = getString(req.query.color, COLOR_DEFAULT);
-			const theme = getString(req.query.theme, THEME_DEFAULT);
-			const icon = getString(req.query.icon, ICON_DEFAULT);
+			const color = isTypeElse(req.query.color, COLOR_DEFAULT);
+			const theme = isTypeElse(req.query.theme, THEME_DEFAULT);
+			const icon = isTypeElse(req.query.icon, ICON_DEFAULT);
 
 			if (!isColor(color)) throw new Error("Invalid color");
 			if (!isTheme(theme)) throw new Error("Invalid theme");

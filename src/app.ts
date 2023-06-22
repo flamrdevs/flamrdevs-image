@@ -13,7 +13,7 @@ import image from "~/libs/@fastify/image";
 import routeTilde from "~/routes/~";
 import routeCore from "~/routes/core";
 
-import { getString } from "~/utils/string";
+import { isTypeElse } from "~/utils/string";
 
 const app = fastify({ logger: !__PROD__ })
 	.register(cors, { origin: "*" })
@@ -40,7 +40,7 @@ const app = fastify({ logger: !__PROD__ })
 	.setErrorHandler(async (error, _, rep) => {
 		app.log.error(error);
 		return json(rep, 500, {
-			message: getString(error.message, "internal server error"),
+			message: isTypeElse(error.message, "internal server error"),
 		});
 	});
 

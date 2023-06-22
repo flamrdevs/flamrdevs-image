@@ -1,7 +1,7 @@
 import type { Color, Theme } from "./types";
 import COLORS from "./colors";
 
-const COLOR = ["gray"] as const satisfies readonly Color[];
+const COLOR = ["neutral", "primary", "success", "info", "warning", "danger"] as const satisfies readonly Color[];
 const COLOR_DEFAULT = COLOR[0] satisfies Color;
 const THEME = ["dark", "light"] as const satisfies readonly Theme[];
 const THEME_DEFAULT = THEME[0] satisfies Theme;
