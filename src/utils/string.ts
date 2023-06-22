@@ -1,3 +1,3 @@
-const getString = (value: unknown, defaultValue: string) => (typeof value === "string" ? value : defaultValue);
+const isTypeElse = (value: unknown, defaultValue: string) => (typeof value === "string" ? value : defaultValue);
 
-export { getString };
+export { isTypeElse };
