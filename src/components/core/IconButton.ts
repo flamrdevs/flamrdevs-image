@@ -14,8 +14,8 @@ type IconButtonProps = PropsWithChildren<{
 	style?: RootCSSProperties;
 }>;
 
-const WIDTH = 28;
-const HEIGHT = 28;
+const WIDTH = 32;
+const HEIGHT = 32;
 
 const IconButton: RootComponent<IconButtonProps> = ({ color, theme, width, height, style = {}, children }) => {
 	const __color__ = select(color, theme);

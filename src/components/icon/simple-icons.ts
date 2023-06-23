@@ -8,7 +8,7 @@ type Props = {
 	fill?: string;
 };
 
-const DEFAULT_SIZE = 16;
+const DEFAULT_SIZE = 20;
 
 const create =
 	(d: string): Component<Props> =>

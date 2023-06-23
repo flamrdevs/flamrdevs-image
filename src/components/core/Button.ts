@@ -14,8 +14,8 @@ type ButtonProps = PropsWithChildren<{
 	style?: RootCSSProperties;
 }>;
 
-const WIDTH = 105;
-const HEIGHT = 28;
+const WIDTH = 112;
+const HEIGHT = 32;
 
 const Button: RootComponent<ButtonProps> = ({ color, theme, width, height, style = {}, children }) => {
 	const __color__ = select(color, theme);
