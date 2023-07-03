@@ -1,30 +1,33 @@
-import { route, json } from "~/libs/fastify";
+import { route, json, apierror } from "~/libs/fastify";
+import cache from "~/libs/cache";
 import type { RootElement } from "~/libs/image";
+import zod, { firstErrorMessage } from "~/libs/zod";
 
 import Button from "~/components/core/Button";
 import IconButton from "~/components/core/IconButton";
-import { ICON_DEFAULT, isSimpleIcons, simpleIcons } from "~/components/icon/simple-icons";
+import simpleIcons, { IconSchema } from "~/components/icon/simple-icons";
 
-import { COLOR_DEFAULT, THEME_DEFAULT, isColor, isTheme } from "~/styles/utils";
+import { ColorSchema, ThemeSchema } from "~/styles/utils";
 
 import * as HOST from "~/utils/host";
-import { isTypeElse } from "~/utils/string";
 
 export default route((fastify, _, done) => {
-	const cache = new Map<string, string>();
-
-	const key = (base: string, object: Record<string, string>) =>
-		`${base}:${Object.entries(object)
-			.map(([key, value]) => `${key}=${value}`)
-			.join("&")}`;
+	const CoreCache = cache<string>();
 
 	const HEADERS = { "content-type": "image/svg+xml" };
 
-	const image = async (key: string, element: () => RootElement): Promise<string> => {
-		let result = cache.get(key);
-		if (typeof result !== "string") cache.set(key, (result = await fastify.image(element())));
-		return result;
+	const getImageKey_mapFn = ([key, value]: [string, any]) => `${key}=${value}`;
+	const getImageKey = <T extends Record<string, any>>(name: string, object: T) => `${name}:${Object.entries(object).map(getImageKey_mapFn).join("&")}`;
+	const image = async <T extends Record<string, any>>(name: string, object: T, element: (object: T) => RootElement): Promise<{ cache: boolean; result: string }> => {
+		const key = getImageKey<T>(name, object);
+		const result = CoreCache.get(key);
+		if (typeof result === "string") return { cache: true, result };
+		return { cache: false, result: CoreCache.set(key, await fastify.image(element(object))) };
 	};
+
+	const ButtonQuerySchema = zod.object({ color: ColorSchema, theme: ThemeSchema, text: zod.string().default("flamrdevs") });
+
+	const IconButtonQuerySchema = zod.object({ color: ColorSchema, theme: ThemeSchema, icon: IconSchema });
 
 	fastify
 
@@ -37,27 +40,32 @@ export default route((fastify, _, done) => {
 			});
 		})
 
-		.get<{ Querystring: Partial<Record<"color" | "theme" | "text", string>> }>("/button", async (req, rep) => {
-			const color = isTypeElse(req.query.color, COLOR_DEFAULT);
-			const theme = isTypeElse(req.query.theme, THEME_DEFAULT);
-			const text = isTypeElse(req.query.text, "flamrdevs");
+		.get("/button", async (req, rep) => {
+			const parsedQuery = await ButtonQuerySchema.safeParseAsync(req.query);
 
-			if (!isColor(color)) throw new Error("Invalid color");
-			if (!isTheme(theme)) throw new Error("Invalid theme");
+			if (parsedQuery.success) {
+				const { cache, result } = await image("button", parsedQuery.data, ({ color, theme, text }) => Button({ color, theme, children: text }));
+				return rep
+					.headers(HEADERS)
+					.headers({ "x-cache": `${cache}` })
+					.send(result);
+			}
 
-			return rep.headers(HEADERS).send(await image(key("button", { color, theme, text }), () => Button({ color, theme, children: text })));
+			throw apierror(400, firstErrorMessage(parsedQuery, "Invalid query"));
 		})
 
-		.get<{ Querystring: Partial<Record<"color" | "theme" | "icon", string>> }>("/icon-button", async (req, rep) => {
-			const color = isTypeElse(req.query.color, COLOR_DEFAULT);
-			const theme = isTypeElse(req.query.theme, THEME_DEFAULT);
-			const icon = isTypeElse(req.query.icon, ICON_DEFAULT);
+		.get("/icon-button", async (req, rep) => {
+			const parsedQuery = await IconButtonQuerySchema.safeParseAsync(req.query);
 
-			if (!isColor(color)) throw new Error("Invalid color");
-			if (!isTheme(theme)) throw new Error("Invalid theme");
-			if (!isSimpleIcons(icon)) throw new Error("Invalid icon");
+			if (parsedQuery.success) {
+				const { cache, result } = await image("icon-button", parsedQuery.data, ({ color, theme, icon }) => IconButton({ color, theme, children: simpleIcons[icon]({}) }));
+				return rep
+					.headers(HEADERS)
+					.headers({ "x-cache": `${cache}` })
+					.send(result);
+			}
 
-			return rep.headers(HEADERS).send(await image(key("icon-button", { color, theme, icon }), () => IconButton({ color, theme, children: simpleIcons[icon]({}) })));
+			throw apierror(400, firstErrorMessage(parsedQuery, "Invalid query"));
 		});
 
 	done();

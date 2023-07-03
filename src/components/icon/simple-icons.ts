@@ -2,6 +2,7 @@ import * as si from "simple-icons";
 
 import { h } from "~/libs/image";
 import type { Component } from "~/libs/image";
+import zod from "~/libs/zod";
 
 type Props = {
 	size?: string | number;
@@ -115,11 +116,110 @@ const simpleIcons = {
 
 type Icon = keyof typeof simpleIcons;
 
+const ICON = [
+	`adonisjs`,
+	`alpine.js`,
+	`appwrite`,
+	`astro`,
+	`axios`,
+	`behance`,
+	`bitbucket`,
+	`capacitor`,
+	`cloudflare`,
+	`cloudflarepages`,
+	`codeberg`,
+	`commitlint`,
+	`css3`,
+	`deno`,
+	`discord`,
+	`docker`,
+	`dribbble`,
+	`electron`,
+	`eslint`,
+	`express`,
+	`fastify`,
+	`figma`,
+	`firebase`,
+	`flutter`,
+	`git`,
+	`github`,
+	`githubpages`,
+	`githubactions`,
+	`gitlab`,
+	`graphql`,
+	`html5`,
+	`instagram`,
+	`javascript`,
+	`json`,
+	`koyeb`,
+	`laravel`,
+	`linkedin`,
+	`mastodon`,
+	`mongodb`,
+	`mysql`,
+	`nativescript`,
+	`nestjs`,
+	`netlify`,
+	`next.js`,
+	`nginx`,
+	`node.js`,
+	`notion`,
+	`npm`,
+	`nuxt.js`,
+	`openai`,
+	`penpot`,
+	`pexels`,
+	`php`,
+	`pinterest`,
+	`planetscale`,
+	`pnpm`,
+	`pocketbase`,
+	`postgresql`,
+	`preact`,
+	`producthunt`,
+	`pwa`,
+	`python`,
+	`react`,
+	`redux`,
+	`remix`,
+	`rust`,
+	`simpleicons`,
+	`slack`,
+	`solid`,
+	`supabase`,
+	`svelte`,
+	`tailwindcss`,
+	`tauri`,
+	`three.js`,
+	`tiktok`,
+	`turborepo`,
+	`twitter`,
+	`typescript`,
+	`unsplash`,
+	`vercel`,
+	`visualstudiocode`,
+	`vite`,
+	`vitest`,
+	`vue.js`,
+	`windows`,
+	`xampp`,
+	`youtube`,
+] as const satisfies readonly Icon[];
 const ICON_DEFAULT = "github" satisfies Icon;
 
-const isSimpleIcons = (value?: unknown): value is Icon => (String(value) as Icon) in simpleIcons;
+const isSimpleIcons = (value?: unknown): value is Icon => ICON.includes(String(value) as Icon);
+
+const IconSchema = zod
+	.enum(ICON, {
+		errorMap: (issue) => {
+			if (issue.code === "invalid_enum_value") return { message: "Invalid icon name" };
+			if (issue.code === "invalid_type") return { message: "Invalid icon type" };
+			return { message: "Icon error" };
+		},
+	})
+	.default(ICON_DEFAULT);
 
 export type { Props };
-export { ICON_DEFAULT };
 export { isSimpleIcons };
-export { simpleIcons };
+export { IconSchema };
+export default simpleIcons;

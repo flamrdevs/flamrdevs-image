@@ -9,4 +9,13 @@ function json<T>(reply: FastifyReply, status: number, object: T) {
 	return object;
 }
 
-export { route, json };
+class APIError {
+	constructor(public status: number, public message: string) {}
+}
+
+const isAPIError = (value: unknown): value is APIError => value instanceof APIError;
+const apierror = (status: number, message: string) => new APIError(status, message);
+
+export { route };
+export { json };
+export { APIError, isAPIError, apierror };

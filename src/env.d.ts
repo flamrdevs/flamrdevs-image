@@ -1,7 +1,7 @@
 declare global {
 	interface ExtendedEnv {
-		readonly MODE?: "development" | "production";
-		readonly PORT?: string;
+		MODE?: "development" | "production";
+		PORT?: string;
 	}
 
 	namespace NodeJS {
